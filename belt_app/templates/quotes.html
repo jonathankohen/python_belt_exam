@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Quotes</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+        />
+    </head>
+    <body>
+        <div class="container">
+            <div class="row my-4">
+                <div class="col">
+                    <h1>Welcome, {{logged_in_user.first_name}}!</h1>
+                    <a href="/myaccount/{{logged_in_user.id}}"
+                        >Edit My Account</a
+                    >
+                    <h3>Quotes:</h3>
+                    {% for quote in all_quotes %}
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-text">
+                                {{quote.author}}: {{quote.content}}
+                            </p>
+                            <p class="card-text">
+                                Posted by
+                                <a
+                                    href="/user/{{quote.uploader.id}}"
+                                    class="card-link"
+                                    >{{quote.uploader.first_name.capitalize}}</a
+                                >
+                            </p>
+                            <p class="card-text">
+                                {{quote.likes.count}} people like this
+                                <a
+                                    href="/like_quote/{{quote.id}}"
+                                    class="card-link"
+                                    >Like!</a
+                                >
+                            </p>
+                            {% if logged_in_user == quote.uploader %}
+                            <p>
+                                <a href="/delete_quote/{{quote.id}}">Delete</a>
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="col my-3">
+                    <a href="/logout">Logout</a>
+                    <h1>Add a Quote!</h1>
+                    {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                        <li>{{message}}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <form action="/add_quote" method="post">
+                        {% csrf_token %}
+                        <p>Author: <input type="text" name="author" /></p>
+                        <p>Quote:</p>
+                        <p>
+                            <textarea
+                                name="quote_content"
+                                cols="30"
+                                rows="10"
+                            ></textarea>
+                        </p>
+                        <button type="submit" class="btn btn-secondary">
+                            Add
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
